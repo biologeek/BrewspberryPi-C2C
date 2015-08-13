@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="js/servletCall.js"></script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Insert title here</title>
+</head>
+<body>
+<p style="text-align: center;font: 36px bold black;">
+DS18B20
+</p>
+<div id="probeTemperatures">
+<table id="probeTemperaturesTab"></table>
+</div>
+<div id="servletGraph"><img src="" id="JFreeGraphServlet"></img></div>
+
+<div id="form">
+Rafraichissement : <input type="text" id="formRefresh" style="width: 20px;" value="2000"></input> ms <br />
+Délai :  <input type="text" id="formDelay" style="width: 20px;" value="2000"></input> min <br />
+</div>
+</body>
+</html>
