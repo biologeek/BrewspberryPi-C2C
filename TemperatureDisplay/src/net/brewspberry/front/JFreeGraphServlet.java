@@ -42,7 +42,7 @@ public class JFreeGraphServlet extends HttpServlet {
 	public static final int DEFAULT_HEIGHT = 300;
 	
 	
-	public static String PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/"+"/";
+	public static String PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
 	
 	public static String JAVA_ROOT_PATH = PROJECT_ROOT_PATH+"TemperatureDisplay/";
 	public static String FIC_ROOT_PATH = PROJECT_ROOT_PATH+"fic/";
@@ -58,7 +58,7 @@ public class JFreeGraphServlet extends HttpServlet {
      */
     public JFreeGraphServlet() {
         super();
-        PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
+        PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
         // TODO Auto-generated constructor stub
     }
 
@@ -68,50 +68,50 @@ public class JFreeGraphServlet extends HttpServlet {
     
 	public static String getPROJECT_ROOT_PATH() {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
+			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
 		
 		return PROJECT_ROOT_PATH;
 	}
 
 	public static void setPROJECT_ROOT_PATH(String pROJECT_ROOT_PATH) {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
+			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
 		PROJECT_ROOT_PATH = pROJECT_ROOT_PATH;
 	}
 	public static String getJAVA_ROOT_PATH() {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
+			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
 		return JAVA_ROOT_PATH;
 	}
 
 	public static void setJAVA_ROOT_PATH(String jAVA_ROOT_PATH) {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
+			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
 		JAVA_ROOT_PATH = jAVA_ROOT_PATH;
 	}
 
 	public static String getFIC_ROOT_PATH() {
 		
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
+			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
 		return FIC_ROOT_PATH;
 	}
 
 	public static void setFIC_ROOT_PATH(String fIC_ROOT_PATH) {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
+			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
 		FIC_ROOT_PATH = fIC_ROOT_PATH;
 	}
 
 	public static String getBCHRECTEMP_FIC() {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
+			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
 		return BCHRECTEMP_FIC;
 	}
 
 	public static void setBCHRECTEMP_FIC(String bCHRECTEMP_FIC) {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
+			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
 		BCHRECTEMP_FIC = bCHRECTEMP_FIC;
 	}
 	/**
