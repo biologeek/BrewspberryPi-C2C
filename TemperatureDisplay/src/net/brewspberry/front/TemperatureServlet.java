@@ -8,7 +8,10 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,6 +24,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class TemperatureServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	
+	static Logger log = Logger.getLogger(TemperatureServlet.class.getName());
        
 	
 	public static String _BCHRECTEMP_FIC_ = "/var/lib/tomcat7/webapps/ROOT/fic/ds18b20_raw_measurements.csv";
@@ -37,9 +43,10 @@ public class TemperatureServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String getIt = generateHTML(parseCSVFile(new File(_BCHRECTEMP_FIC_)));
+		String[] temp = parseCSVFile(new File(_BCHRECTEMP_FIC_));
+		String getIt = generateHTML(temp);
 		
-		System.out.println("Fichier : "+_BCHRECTEMP_FIC_);
+		log.info((new Date()).getTime() + "Current temperature : "+temp);
 		PrintWriter output = response.getWriter();
 		output.write(getIt);
 	}
