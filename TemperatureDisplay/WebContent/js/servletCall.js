@@ -8,6 +8,8 @@ $(document).ready(function () {
 		var img = document.getElementById("JFreeGraphServlet");
 		
 		console.log(img.id);
+		
+		var url = "JFreeGraphServlet?d="+formDelay
 		$.ajax({
 			url: "JFreeGraphServlet", 
 			type: "GET",
