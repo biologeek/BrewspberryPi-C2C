@@ -35,6 +35,18 @@ import org.jfree.data.xy.XYDataset;
  * using a CSV file containing timestamps and temperature values
  * 
  * Author : Xavier CARON Version : 1.0 License : free
+ * 
+ * ******************************************************************************************************
+ * 			Version			*	Date	*			Author		*		Comment							*
+ * ******************************************************************************************************
+ * 		1.0					* 20150810	*	Biologeek			*	Init								*
+ * ------------------------------------------------------------------------------------------------------
+ * 		1.0.1				* 20150817	*	Biologeek			*	Graph window updated dynamically	*
+ * ------------------------------------------------------------------------------------------------------
+ * 																										*
+ * ******************************************************************************************************
+ * 
+ * 
  */
 public class JFreeGraphServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

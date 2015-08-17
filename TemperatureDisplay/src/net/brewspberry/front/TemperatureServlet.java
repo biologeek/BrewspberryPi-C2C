@@ -20,8 +20,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class TemperatureServlet
- */
+ * 
+ * Software :JFreeGraphServlet is a software used to get current Temperature for one or
+ * more probes
+ * 
+ * Author : Xavier CARON Version : 1.0 License : free
+ * ******************************************************************************************************
+ * 			Version			*	Date	*			Author		*		Comment							*
+ * ******************************************************************************************************
+ * 		1.0					* 20150810	*	Biologeek			*	Init								*
+ * ------------------------------------------------------------------------------------------------------
+ * 																										*
+ * ******************************************************************************************************
+**/
 public class TemperatureServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
