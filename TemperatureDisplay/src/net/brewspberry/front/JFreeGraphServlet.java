@@ -228,7 +228,7 @@ public class JFreeGraphServlet extends HttpServlet {
 		List<TimeSeries> serie = new ArrayList<TimeSeries>();
 		
 		if (compteur > 0) {
-			// On cree autant de series qu'il y a de sondes
+			// As much series as there are probes
 			for (int k = 0; k < data.get(0).length - 1; k++) {
 				serie.add(new TimeSeries("PROBE" + k));
 			}
