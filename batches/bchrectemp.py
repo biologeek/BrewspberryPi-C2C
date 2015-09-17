@@ -32,7 +32,7 @@ from MySQLDB import MySQLDB
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
-PROJECT_DIR = "/var/lib/tomcat7/webapps/ROOT/"
+PROJECT_DIR = "/home/pi/brewhouse/"
 base_dir = '/sys/bus/w1/devices/'
 device_folder = glob.glob(base_dir + '28*')
 device_file = [f + '/w1_slave' for f in device_folder]
@@ -65,15 +65,18 @@ def read_temp_raw():
 	"""
 	i=0
 	lines = [None]*len(device_file)
-
-	# Looping over files list
-	for file in device_file :
-		f = open(file, 'r')
-		lines[i] = f.readlines()
-		i+=1
+	if len (device_file) > 0 :
+		# Looping over files list
+		for file in device_file :
+			f = open(file, 'r')
+			lines[i] = f.readlines()
+			i+=1
 	
-	print str(i)+" files read !"
-	f.close()
+		print str(i)+" files read !"
+		f.close()
+	else :
+		print "0 files read"
+		
 	return lines
 
 def read_temp():
@@ -176,7 +179,7 @@ while True:
 		probeUUID= os.path.basename(device_folder[i])
 		
 		write_temp_into_csv(';'+str(temp))
-		#write_temp_into_mysql(date, probeUUId, i, temp)
+		write_temp_into_mysql(date, probeUUId, i, temp)
 	   	i+=1
 
 
