@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -37,16 +39,16 @@ public class TemperatureServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	
-	static Logger log = Logger.getLogger(TemperatureServlet.class.getName());
+	static Logger logger = Logger.getLogger(TemperatureServlet.class.getName());
        
 	
-	public static String _BCHRECTEMP_FIC_ = "/home/xavier/biologeekRepoGit/fic/ds18b20_raw_measurements.csv";
+	public static String _BCHRECTEMP_FIC_ = "/home/pi/brewhouse/fic/ds18b20_raw_measurements.csv";
     /**
      * @see HttpServlet#HttpServlet()
      */
     public TemperatureServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        logger.setLevel(Level.FINEST);
     }
 
 	/**
@@ -57,7 +59,7 @@ public class TemperatureServlet extends HttpServlet {
 		String[] temp = parseCSVFile(new File(_BCHRECTEMP_FIC_));
 		String getIt = generateHTML(temp);
 		
-		log.info((new Date()).getTime() + "Current temperature : "+temp);
+		logger.info("Current temperature : "+getIt);
 		PrintWriter output = response.getWriter();
 		output.write(getIt);
 	}
@@ -83,8 +85,8 @@ public class TemperatureServlet extends HttpServlet {
 
 	    for (int j = 1; j< last.length ; j++) {
 	    	float nbr = Float.parseFloat(last[j]);
-	    	
-	    	nbr = nbr/1000;
+	    	logger.log(Level.CONFIG, "parsing float : "+nbr);
+
 	    	last[j] = Float.toString(nbr);
 	    }
 		return last;

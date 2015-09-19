@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -65,7 +66,7 @@ public class JFreeGraphServlet extends HttpServlet {
 
 	public int graphSize = 2000;
 
-	static Logger logger = Logger.getLogger(JFreeGraphServlet.class.getName());
+	static Logger logger = Logger.getLogger(JFreeGraphServlet.class.toString());
 
 	static Date firstTime = null;
 
@@ -74,57 +75,57 @@ public class JFreeGraphServlet extends HttpServlet {
 	 */
 	public JFreeGraphServlet() {
 		super();
-		PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
-		// TODO Auto-generated constructor stub
+		PROJECT_ROOT_PATH = "/home/pi/brewhouse/";
+        logger.setLevel(Level.FINEST);
 	}
 
 	public static String getPROJECT_ROOT_PATH() {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
+			PROJECT_ROOT_PATH = "/home/pi/brewhouse/";
 
 		return PROJECT_ROOT_PATH;
 	}
 
 	public static void setPROJECT_ROOT_PATH(String pROJECT_ROOT_PATH) {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
+			PROJECT_ROOT_PATH = "/home/pi/brewhouse/";
 		PROJECT_ROOT_PATH = pROJECT_ROOT_PATH;
 	}
 
 	public static String getJAVA_ROOT_PATH() {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
+			PROJECT_ROOT_PATH = "/home/pi/brewhouse/";
 		return JAVA_ROOT_PATH;
 	}
 
 	public static void setJAVA_ROOT_PATH(String jAVA_ROOT_PATH) {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
+			PROJECT_ROOT_PATH = "/home/pi/brewhouse/";
 		JAVA_ROOT_PATH = jAVA_ROOT_PATH;
 	}
 
 	public static String getFIC_ROOT_PATH() {
 
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
+			PROJECT_ROOT_PATH = "/home/pi/brewhouse/";
 		return FIC_ROOT_PATH;
 	}
 
 	public static void setFIC_ROOT_PATH(String fIC_ROOT_PATH) {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
+			PROJECT_ROOT_PATH = "/home/pi/brewhouse/";
 		FIC_ROOT_PATH = fIC_ROOT_PATH;
 	}
 
 	public static String getBCHRECTEMP_FIC() {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
+			PROJECT_ROOT_PATH = "/home/pi/brewhouse/";
 		return BCHRECTEMP_FIC;
 	}
 
 	public static void setBCHRECTEMP_FIC(String bCHRECTEMP_FIC) {
 		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/home/xavier/biologeekRepoGit/";
+			PROJECT_ROOT_PATH = "/home/pi/brewhouse/";
 		BCHRECTEMP_FIC = bCHRECTEMP_FIC;
 	}
 
@@ -174,7 +175,7 @@ public class JFreeGraphServlet extends HttpServlet {
 			logger.info(e.getMessage());
 			e.printStackTrace();
 		}
-
+		System.out.println(chart);
 		ChartUtilities.writeChartAsPNG(outputStream, chart, DEFAULT_WIDTH,
 				DEFAULT_HEIGHT);
 	}
@@ -203,7 +204,6 @@ public class JFreeGraphServlet extends HttpServlet {
 				lineList = new String[2];
 			}
 			// If date at the line + graphSize is inferior to now()
-			System.out.println(lineList[0]);
 			if (!isCurrentDateSuperiorToLimit(lineList[0], graphSize2)) {
 				result.add(lineList);
 			}
@@ -292,6 +292,7 @@ public class JFreeGraphServlet extends HttpServlet {
 
 		chart = ChartFactory.createTimeSeriesChart(title, xAxisLabel,
 				yAxisLabel, series, legend, defaultTooltips, defaultURLs);
+		System.out.println("generateChartFromTimeSeries "+chart);
 
 		return chart;
 	}
@@ -302,7 +303,7 @@ public class JFreeGraphServlet extends HttpServlet {
 			int graphSize = Integer.parseInt(delai);
 		}
 		catch (Exception e) {
-			System.out.println("Impossible de parser : "+delai);
+			logger.log(Level.SEVERE, "Impossible to parse : "+delai);
 		}
 
 	}

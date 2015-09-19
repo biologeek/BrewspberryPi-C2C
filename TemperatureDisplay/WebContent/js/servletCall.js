@@ -9,14 +9,17 @@ $(document).ready(function () {
 		
 		console.log(img.id);
 		
-		var url = "JFreeGraphServlet?d="+formDelay
+		var url = "JFreeGraphServlet"
 		$.ajax({
 			url: "JFreeGraphServlet", 
 			type: "GET",
 			success: function( notification ) {
-				console.log("JFreeGraphServlet?r="+Math.random());
-
-				img.parentNode.removeChild(img);
+				console.log("JFreeGraphServlet");
+				if (img.hasChildNodes()){
+					console.log("img exists !")
+					img.parentNode.removeChild(img);
+				}
+				
 				var imgGraph = document.createElement("img");
 				imgGraph.id ="JFreeGraphServlet";
 				document.getElementById("servletGraph").appendChild(imgGraph);
@@ -32,13 +35,15 @@ $(document).ready(function () {
 	function callTemperatureServlet (){
 		
 		var txt = document.getElementById("probeTemperaturesTab");
+		if (txt.hasChildNodes()){
+			txt.parentNode.removeChild(txt);
+		}
 		$.ajax({
 			url: "TemperatureServlet", 
 			type: "GET",
 			success: function( notification ) {
-				console.log("TemperatureServlet?r="+Math.random());
+				console.log("TemperatureServlet");
 
-				txt.parentNode.removeChild(txt);
 				var txt = document.createElement("table");
 				txt.id= "probeTemperaturesTab";
 				document.getElementById("probeTemperatures").appendChild(txt);
@@ -54,6 +59,6 @@ $(document).ready(function () {
 		callGraphServlet();
 	}	
 	
-	setInterval(callServlet,1000);
+	setInterval(callServlet,2000);
 
 });

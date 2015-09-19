@@ -4,7 +4,7 @@
   
   <servlet>
   	<servlet-name>TemperatureServlet</servlet-name>
-  	<servlet-class>net.brewspberry.front.JFreeGraphServlet</servlet-class>
+  	<servlet-class>net.brewspberry.front.TemperatureServlet</servlet-class>
   	<load-on-startup>1</load-on-startup>
   </servlet>
   <servlet>

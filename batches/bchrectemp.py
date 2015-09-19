@@ -92,24 +92,26 @@ def read_temp():
 	file_lines = read_temp_raw()
 
 	j=0
-
 	temp_c=[None]*len(device_file)
+	if len(file_lines) > 0 :
 
-	# While the probe is not ready, it sleeps for a little time and tries back
-	while file_lines[0][0].strip()[-3:] != 'YES':
-		time.sleep(time_to_sleep)
-		file_lines = read_temp_raw()
+		
+		print len(file_lines)
+		# While the probe is not ready, it sleeps for a little time and tries back
+		while file_lines[0][0].strip()[-3:] != 'YES':	
+			time.sleep(time_to_sleep)
+			file_lines = read_temp_raw()
 
-	for lines in file_lines :
-		# For each line we try to find the temperature value
-		equals_pos = lines[1].find('t=')
-
-		if equals_pos != -1 :
-			print "Getting temperature"
-			temp_string = lines[1][equals_pos+2:]
-			temp_c[j] = float(temp_string) / 1000.0
-		j+=1
+		for lines in file_lines :
+			# For each line we try to find the temperature value
+			equals_pos = lines[1].find('t=')
 	
+			if equals_pos != -1 :
+				print "Getting temperature"
+				temp_string = lines[1][equals_pos+2:]
+				temp_c[j] = float(temp_string) / 1000.0
+			j+=1
+		
 	return temp_c
 
 
@@ -129,22 +131,22 @@ def write_temp_into_csv (data):
 		w.write (str(data))
 	w.close()
 
-"""
-def write_temp_into_mysql (date, uuid, probe, temperature):
 
+def write_temp_into_mysql (date, uuid, probe, temperature):
+	"""
 	
 		function write_temp_into_mysql
 		- IN : date (current date), probe (current probe), temperature (current temperature)
 		- OUT : void
 
 		This function inserts a new entry in mysql table for probes (name defined in header)
-
+	"""
 
 	req = "INSERT INTO `"+db_table_name+"` (tmp_id, tmp_probe, tmp_probeuuid, tmp_date, tmp_rec_temp) VALUES ('', 'PROBE"+str(probe)+"', '"+uuid+"', '"+date+"', '"+temperature+"');"
 	
 	mysql.executeQuery (req)
 
-	"""
+
 
 def write_temp_into_postgres (date, uuid, probe, temperature):
 
@@ -169,21 +171,21 @@ while True:
 	date = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'))
 	temperatures = read_temp()
 	print temperatures
-	
-	write_temp_into_csv(date)
-	print temperatures
+	if len(temperatures) > 0 :
+		write_temp_into_csv(date)
+		print temperatures
 
-	i=0
-	for temp in temperatures :
+		i=0
+		for temp in temperatures :
 
-		probeUUID= os.path.basename(device_folder[i])
+			probeUUID= os.path.basename(device_folder[i])
 		
-		write_temp_into_csv(';'+str(temp))
-		write_temp_into_mysql(date, probeUUId, i, temp)
-	   	i+=1
+			write_temp_into_csv(';'+str(temp))
+			#write_temp_into_mysql(date, probeUUId, i, temp)
+		   	i+=1
 
 
-	write_temp_into_csv("\n")
+		write_temp_into_csv("\n")
 
-	time.sleep(1)
+		time.sleep(0.5)
 
