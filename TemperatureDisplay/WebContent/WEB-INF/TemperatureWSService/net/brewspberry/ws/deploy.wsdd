@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Use this file to deploy some handlers/chains and services      --><!-- Two ways to do this:                                           --><!--   java org.apache.axis.client.AdminClient deploy.wsdd          --><!--      after the axis server is running                          --><!-- or                                                             --><!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   --><!--      from the same directory that the Axis engine runs         --><deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from TemperatureWSService WSDL service -->
+
+  <service name="TemperatureWS" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://ws.brewspberry.net"/>
+      <parameter name="wsdlServiceElement" value="TemperatureWSService"/>
+      <parameter name="schemaQualified" value="http://ws.brewspberry.net,http://beans.brewspberry.net"/>
+      <parameter name="wsdlServicePort" value="TemperatureWS"/>
+      <parameter name="className" value="net.brewspberry.ws.TemperatureWS"/>
+      <parameter name="wsdlPortType" value="TemperatureWS"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation xmlns:operNS="http://ws.brewspberry.net" xmlns:retNS="http://ws.brewspberry.net" xmlns:rtns="http://ws.brewspberry.net" xmlns:tns="http://ws.brewspberry.net" name="getAllLastTemperature" qname="operNS:getAllLastTemperature" returnQName="retNS:getAllLastTemperatureReturn" returnType="rtns:ArrayOf_xsd_anyType" returnItemQName="tns:item" soapAction="">
+      </operation>
+      <operation xmlns:operNS="http://ws.brewspberry.net" xmlns:retNS="http://ws.brewspberry.net" xmlns:rtns="http://beans.brewspberry.net" name="getLastTemperature" qname="operNS:getLastTemperature" returnQName="retNS:getLastTemperatureReturn" returnType="rtns:Temperature" soapAction="">
+        <parameter xmlns:pns="http://ws.brewspberry.net" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:probe" type="tns:int"/>
+      </operation>
+      <operation xmlns:operNS="http://ws.brewspberry.net" xmlns:retNS="http://ws.brewspberry.net" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="returnLastLineFromCSV" qname="operNS:returnLastLineFromCSV" returnQName="retNS:returnLastLineFromCSVReturn" returnType="rtns:string" soapAction="">
+      </operation>
+      <parameter name="allowedMethods" value="getLastTemperature getAllLastTemperature returnLastLineFromCSV"/>
+
+      <typeMapping xmlns:ns="http://ws.brewspberry.net" qname="ns:&gt;getAllLastTemperature" type="java:net.brewspberry.ws.GetAllLastTemperature" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://ws.brewspberry.net" qname="ns:&gt;getLastTemperatureResponse" type="java:net.brewspberry.ws.GetLastTemperatureResponse" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://ws.brewspberry.net" qname="ns:&gt;returnLastLineFromCSV" type="java:net.brewspberry.ws.ReturnLastLineFromCSV" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://ws.brewspberry.net" qname="ns:&gt;getAllLastTemperatureResponse" type="java:net.brewspberry.ws.GetAllLastTemperatureResponse" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://beans.brewspberry.net" qname="ns:Temperature" type="java:net.brewspberry.beans.Temperature" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://ws.brewspberry.net" xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema" qname="ns:ArrayOf_xsd_anyType" type="java:java.lang.Object[]" innerType="cmp-ns:anyType" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://ws.brewspberry.net" qname="ns:&gt;returnLastLineFromCSVResponse" type="java:net.brewspberry.ws.ReturnLastLineFromCSVResponse" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://ws.brewspberry.net" qname="ns:&gt;getLastTemperature" type="java:net.brewspberry.ws.GetLastTemperature" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+  </service>
+</deployment>

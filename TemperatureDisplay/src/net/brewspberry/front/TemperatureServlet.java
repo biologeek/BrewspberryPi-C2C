@@ -23,83 +23,94 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 
- * Software :JFreeGraphServlet is a software used to get current Temperature for one or
- * more probes
+ * Software :JFreeGraphServlet is a software used to get current Temperature for
+ * one or more probes
  * 
- * Author : Xavier CARON Version : 1.0 License : free
  * ******************************************************************************************************
- * 			Version			*	Date	*			Author		*		Comment							*
+ * Version 		* 	Date 	* 		Author		*				 Comment 								*
+ * ****************************************************************************************************** 
+ * 	1.0 		* 20150810 	*		Biologeek 	* 					Init 								*
+ * ---------------------------------------------------------------------------------------------------- *
  * ******************************************************************************************************
- * 		1.0					* 20150810	*	Biologeek			*	Init								*
- * ------------------------------------------------------------------------------------------------------
- * 																										*
- * ******************************************************************************************************
-**/
+ **/
 public class TemperatureServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	static Logger logger = Logger.getLogger(TemperatureServlet.class.getName());
-       
-	
+
 	public static String _BCHRECTEMP_FIC_ = "/home/pi/brewhouse/fic/ds18b20_raw_measurements.csv";
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public TemperatureServlet() {
-        super();
-        logger.setLevel(Level.FINEST);
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public TemperatureServlet() {
+		super();
+		logger.setLevel(Level.FINEST);
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 
 		String[] temp = parseCSVFile(new File(_BCHRECTEMP_FIC_));
 		String getIt = generateHTML(temp);
-		
-		logger.info("Current temperature : "+getIt);
+
+		logger.info("Current temperature : " + getIt);
 		PrintWriter output = response.getWriter();
 		output.write(getIt);
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
-	public String[] parseCSVFile (File file) throws IOException {
-		
+
+	public String[] parseCSVFile(File file) throws IOException {
+
 		String[] last;
 		String line, lastLine = null;
-				
+
 		BufferedReader reader = new BufferedReader(new FileReader(file));
-		
 
-	    while ((line = reader.readLine()) != null) {
-	    	lastLine = line;
-	    }
-	    last = lastLine.split(";");
+		while ((line = reader.readLine()) != null) {
+			lastLine = line;
+		}
+		last = lastLine.split(";");
 
-	    for (int j = 1; j< last.length ; j++) {
-	    	float nbr = Float.parseFloat(last[j]);
-	    	logger.log(Level.CONFIG, "parsing float : "+nbr);
+		for (int j = 1; j < last.length; j++) {
+			float nbr = Float.parseFloat(last[j]);
+			logger.log(Level.CONFIG, "parsing float : " + nbr);
 
-	    	last[j] = Float.toString(nbr);
-	    }
+			last[j] = Float.toString(nbr);
+		}
 		return last;
 	}
-	
-	String generateHTML (String[] data) {
-		String htmlCode = "<tr>";
-		for (int i = 1;i < data.length;i++) {
-			htmlCode = htmlCode+"<td>PROBE"+ i+ " : "+data[i]+"</td>";
+
+	String generateHTML(String[] data) {
+
+		if (data == null) {
+			return "<tr><td>PROBE</td></tr>";
+		} else {
+
+			if (data.length == 0) {
+				return "<tr><td>PROBE</td></tr>";
+			} else {
+				String htmlCode = "<tr>";
+				for (int i = 1; i < data.length; i++) {
+					htmlCode = htmlCode + "<td>PROBE" + i + " : " + data[i]
+							+ "</td>";
+				}
+				htmlCode = htmlCode + "</tr>";
+				return htmlCode;
+			}
 		}
-		htmlCode = htmlCode+"</tr>";
-		return htmlCode;
 	}
-	
-	
+
 }

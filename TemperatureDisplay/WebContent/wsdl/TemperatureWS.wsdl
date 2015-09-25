@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://ws.brewspberry.net" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://ws.brewspberry.net" xmlns:intf="http://ws.brewspberry.net" xmlns:tns1="http://beans.brewspberry.net" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://ws.brewspberry.net" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://beans.brewspberry.net"/>
+   <element name="getAllLastTemperature">
+    <complexType/>
+   </element>
+   <element name="getAllLastTemperatureResponse">
+    <complexType>
+     <sequence>
+      <element name="getAllLastTemperatureReturn" type="impl:ArrayOf_xsd_anyType"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="ArrayOf_xsd_anyType">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="xsd:anyType"/>
+    </sequence>
+   </complexType>
+   <element name="getLastTemperature">
+    <complexType>
+     <sequence>
+      <element name="probe" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getLastTemperatureResponse">
+    <complexType>
+     <sequence>
+      <element name="getLastTemperatureReturn" type="tns1:Temperature"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="returnLastLineFromCSV">
+    <complexType/>
+   </element>
+   <element name="returnLastLineFromCSVResponse">
+    <complexType>
+     <sequence>
+      <element name="returnLastLineFromCSVReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://beans.brewspberry.net" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://ws.brewspberry.net"/>
+   <complexType name="Temperature">
+    <sequence>
+     <element name="date" nillable="true" type="xsd:dateTime"/>
+     <element name="probe" nillable="true" type="xsd:string"/>
+     <element name="temperature" nillable="true" type="xsd:double"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="getLastTemperatureRequest">
+
+      <wsdl:part element="impl:getLastTemperature" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getAllLastTemperatureResponse">
+
+      <wsdl:part element="impl:getAllLastTemperatureResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getAllLastTemperatureRequest">
+
+      <wsdl:part element="impl:getAllLastTemperature" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getLastTemperatureResponse">
+
+      <wsdl:part element="impl:getLastTemperatureResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="returnLastLineFromCSVRequest">
+
+      <wsdl:part element="impl:returnLastLineFromCSV" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="returnLastLineFromCSVResponse">
+
+      <wsdl:part element="impl:returnLastLineFromCSVResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="TemperatureWS">
+
+      <wsdl:operation name="getAllLastTemperature">
+
+         <wsdl:input message="impl:getAllLastTemperatureRequest" name="getAllLastTemperatureRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getAllLastTemperatureResponse" name="getAllLastTemperatureResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getLastTemperature">
+
+         <wsdl:input message="impl:getLastTemperatureRequest" name="getLastTemperatureRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getLastTemperatureResponse" name="getLastTemperatureResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="returnLastLineFromCSV">
+
+         <wsdl:input message="impl:returnLastLineFromCSVRequest" name="returnLastLineFromCSVRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:returnLastLineFromCSVResponse" name="returnLastLineFromCSVResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="TemperatureWSSoapBinding" type="impl:TemperatureWS">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="getAllLastTemperature">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getAllLastTemperatureRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getAllLastTemperatureResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getLastTemperature">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getLastTemperatureRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getLastTemperatureResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="returnLastLineFromCSV">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="returnLastLineFromCSVRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="returnLastLineFromCSVResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="TemperatureWSService">
+
+      <wsdl:port binding="impl:TemperatureWSSoapBinding" name="TemperatureWS">
+
+         <wsdlsoap:address location="http://localhost:8080/TemperatureDisplay/services/TemperatureWS"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

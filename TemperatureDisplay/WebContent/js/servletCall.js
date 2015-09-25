@@ -56,7 +56,6 @@ $(document).ready(function () {
 	
 	function callServlet () {
 		callTemperatureServlet();
-		callGraphServlet();
 	}	
 	
 	setInterval(callServlet,2000);
