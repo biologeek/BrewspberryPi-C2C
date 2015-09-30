@@ -55,7 +55,7 @@ public class JFreeGraphServlet extends HttpServlet {
 	public static final int DEFAULT_WIDTH = 800;
 	public static final int DEFAULT_HEIGHT = 300;
 
-	public static String PROJECT_ROOT_PATH = "/home/pi/brewhouse/";
+	public static String PROJECT_ROOT_PATH = "/home/xavier/";
 
 	public static String JAVA_ROOT_PATH = PROJECT_ROOT_PATH
 			+ "TemperatureDisplay/";

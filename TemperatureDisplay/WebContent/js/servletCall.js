@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(window).ready(function () {
 	
 	function callGraphServlet (){
 
@@ -6,6 +6,7 @@ $(document).ready(function () {
 		console.log(document.getElementById("formDelay").value);
 
 		var img = document.getElementById("JFreeGraphServlet");
+		var div = document.getElementById("servletGraph");
 		
 		console.log(img.id);
 		
@@ -15,9 +16,9 @@ $(document).ready(function () {
 			type: "GET",
 			success: function( notification ) {
 				console.log("JFreeGraphServlet");
-				if (img.hasChildNodes()){
+				if (typeof img !== "undefined"){
 					console.log("img exists !")
-					img.parentNode.removeChild(img);
+					div.removeChild(div.childNodes[0]);
 				}
 				
 				var imgGraph = document.createElement("img");
@@ -55,7 +56,7 @@ $(document).ready(function () {
 	}
 	
 	function callServlet () {
-		callTemperatureServlet();
+		callGraphServlet();
 	}	
 	
 	setInterval(callServlet,2000);

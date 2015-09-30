@@ -38,7 +38,7 @@ public class TemperatureServlet extends HttpServlet {
 
 	static Logger logger = Logger.getLogger(TemperatureServlet.class.getName());
 
-	public static String _BCHRECTEMP_FIC_ = "/home/pi/brewhouse/fic/ds18b20_raw_measurements.csv";
+	public static String _BCHRECTEMP_FIC_ = "/home/xavier/fic/ds18b20_raw_measurements.csv";
 
 	/**
 	 * @see HttpServlet#HttpServlet()

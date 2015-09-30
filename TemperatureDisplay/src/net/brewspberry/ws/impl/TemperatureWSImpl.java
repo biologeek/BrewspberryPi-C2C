@@ -21,14 +21,16 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.ws.BindingType;
 
 import net.brewspberry.beans.Temperature;
 import net.brewspberry.ws.TemperatureWS;
 
 @WebService(endpointInterface="net.brewspberry.ws.impl.TemperatureWSImpl")
+@BindingType(javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING) 
 public class TemperatureWSImpl implements TemperatureWS {
 
-	private String csvPath = "/home/pi/brewhouse/fic/ds18b20_raw_measurements.csv";
+	private String csvPath = "/home/xavier/fic/ds18b20_raw_measurements.csv";
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSSSSS");
 	private Temperature last = new Temperature();
@@ -69,7 +71,7 @@ public class TemperatureWSImpl implements TemperatureWS {
 					last.setTemperature(0.0);
 					last.setProbe("PROBE-1");
 				}
-				
+				System.out.println(last);
 				lastTemperatureList.add(last);
 			}
 		}
@@ -80,6 +82,9 @@ public class TemperatureWSImpl implements TemperatureWS {
 			last.setProbe("PROBE-1");
 			lastTemperatureList.add(last);
 		}
+		
+		System.out.println(lastTemperatureList.size()+" lastTemperatureList");
+
 		return lastTemperatureList;
 	}
 
