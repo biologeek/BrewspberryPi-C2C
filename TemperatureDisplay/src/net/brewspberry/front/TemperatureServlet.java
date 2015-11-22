@@ -23,7 +23,7 @@ public class TemperatureServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	
-	public static String _BCHRECTEMP_FIC_ = "/var/lib/tomcat7/webapps/ROOT/fic/ds18b20_raw_measurements.csv";
+	public static String _BCHRECTEMP_FIC_ = "/opt/tomcat/webapps/TemperatureDisplay/fic/ds18b20_raw_measurements.csv";
     /**
      * @see HttpServlet#HttpServlet()
      */

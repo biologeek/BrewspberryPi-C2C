@@ -9,7 +9,9 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -17,6 +19,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.brewspberry.business.IGenericService;
+import net.brewspberry.business.beans.Etape;
+import net.brewspberry.business.beans.TemperatureMeasurement;
+import net.brewspberry.business.service.EtapeServiceImpl;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -29,115 +36,67 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
 /**
- * Software :JFreeGraphServlet is a software for generating JFreeChart plots using a CSV file containing timestamps and temperature values
+ * Software :JFreeGraphServlet is a software for generating JFreeChart plots
+ * using a CSV file containing timestamps and temperature values
  * 
- * Author : Xavier CARON
- * Version : 1.0
- * License : free
+ * Author : Xavier CARON Version : 1.0 License : free
  */
 public class JFreeGraphServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final int DEFAULT_WIDTH = 800;
 	public static final int DEFAULT_HEIGHT = 300;
-	
-	
-	public static String PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/"+"/";
-	
-	public static String JAVA_ROOT_PATH = PROJECT_ROOT_PATH+"TemperatureDisplay/";
-	public static String FIC_ROOT_PATH = PROJECT_ROOT_PATH+"fic/";
-	
-	public static String BCHRECTEMP_FIC = FIC_ROOT_PATH+"ds18b20_raw_measurements.csv";
-	
 
+	public String PROJECT_ROOT_PATH = "/opt/tomcat/webapps";
+
+	public String JAVA_ROOT_PATH = PROJECT_ROOT_PATH + "/TemperatureDisplay";
+	public String FIC_ROOT_PATH = "/home/pi/brewspberry-batches/fic";
+
+	public String BCHRECTEMP_FIC = FIC_ROOT_PATH
+			+ "/ds18b20_raw_measurements.csv";
+
+	static {
+		System.setProperty("java.awt.headless", "true");
+	}
 
 	static Date firstTime = null;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public JFreeGraphServlet() {
-        super();
-        PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
-        // TODO Auto-generated constructor stub
-    }
 
-    
-    
-    
-    
-	public static String getPROJECT_ROOT_PATH() {
-		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
-		
-		return PROJECT_ROOT_PATH;
-	}
+	IGenericService<Etape> etapeService = new EtapeServiceImpl();
 
-	public static void setPROJECT_ROOT_PATH(String pROJECT_ROOT_PATH) {
-		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
-		PROJECT_ROOT_PATH = pROJECT_ROOT_PATH;
-	}
-	public static String getJAVA_ROOT_PATH() {
-		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
-		return JAVA_ROOT_PATH;
-	}
-
-	public static void setJAVA_ROOT_PATH(String jAVA_ROOT_PATH) {
-		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
-		JAVA_ROOT_PATH = jAVA_ROOT_PATH;
-	}
-
-	public static String getFIC_ROOT_PATH() {
-		
-		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
-		return FIC_ROOT_PATH;
-	}
-
-	public static void setFIC_ROOT_PATH(String fIC_ROOT_PATH) {
-		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
-		FIC_ROOT_PATH = fIC_ROOT_PATH;
-	}
-
-	public static String getBCHRECTEMP_FIC() {
-		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
-		return BCHRECTEMP_FIC;
-	}
-
-	public static void setBCHRECTEMP_FIC(String bCHRECTEMP_FIC) {
-		if (PROJECT_ROOT_PATH == null)
-			PROJECT_ROOT_PATH = "/var/lib/tomcat7/webapps/ROOT/";
-		BCHRECTEMP_FIC = bCHRECTEMP_FIC;
-	}
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
-		// If the request has either width or height attributes, the chart will be attribute-sized
-		if (!(request.getAttribute("width") != null)){
+	public JFreeGraphServlet() {
+		super();
+
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+
+		// If the request has either width or height attributes, the chart will
+		// be attribute-sized
+		if (!(request.getAttribute("width") != null)) {
 			try {
-				int width = Integer.parseInt((String) request.getAttribute("width"));
-			}
-			catch (Exception e){
+				int width = Integer.parseInt((String) request
+						.getAttribute("width"));
+			} catch (Exception e) {
 				int width = DEFAULT_WIDTH;
-				
+
 			}
-		}
-		else {
+		} else {
 			int width = DEFAULT_WIDTH;
 		}
-		if (!(request.getAttribute("height") != null)){
+		if (!(request.getAttribute("height") != null)) {
 			try {
-				int height = Integer.parseInt((String) request.getAttribute("height"));
-			}
-			catch (Exception e){
+				int height = Integer.parseInt((String) request
+						.getAttribute("height"));
+			} catch (Exception e) {
 				int height = DEFAULT_HEIGHT;
 			}
 		}
@@ -145,95 +104,172 @@ public class JFreeGraphServlet extends HttpServlet {
 		else {
 			int height = DEFAULT_HEIGHT;
 		}
+
+		JFreeChart chart = null;
+
+		if (request.getParameter("type") != null) {
+
+			String type = request.getParameter("type");
+
+			switch (type) {
+
+			case "etp":
+
+				Long etapeID = null;
+				List<TemperatureMeasurement> tempList = null;
+				if (request.getParameter("eid") != null) {
+
+					String eid = request.getParameter("eid");
+
+					etapeID = Long.parseLong(eid);
+
+					tempList = etapeService.getElementById(etapeID)
+							.getEtp_temperature_measurement();
+
+					List<String> probesList = new ArrayList<String>();
+
+					probesList = getDistinctProbes(tempList);
+
+					response.setContentType("image/png");
+
+					try {
+						chart = generateChartFromTimeSeries(
+								createDataset(parseTemperatureMeasurements(
+										tempList, probesList)), "DS18B20",
+								"Time", "Temperature", true);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+
+				break;
+			}
+		} else {
+			System.out.println(BCHRECTEMP_FIC);
+			try {
+				chart = generateChartFromTimeSeries(
+						createDataset(parseCSVFile(new File(BCHRECTEMP_FIC))),
+						"DS18B20", "Time", "Temperature", true);
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 		response.setContentType("image/png");
 
 		OutputStream outputStream = response.getOutputStream();
-		
-		JFreeChart chart = null;
+
 		try {
-			chart = generateChartFromTimeSeries(createDataset(parseCSVFile(new File(BCHRECTEMP_FIC))), "DS18B20", "Time", "Temperature", true);
-		} catch (NumberFormatException | ParseException e) {
+			ChartUtilities.writeChartAsPNG(outputStream, chart, DEFAULT_WIDTH,
+					DEFAULT_HEIGHT);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		ChartUtilities.writeChartAsPNG(outputStream, chart , DEFAULT_WIDTH, DEFAULT_HEIGHT);
+
 	}
 
-	
-	
 	/***************************************
-	 * parseCSVFile reads and formats CSV 
-	 * file created by BCHRECTEMP batch
-	 * - IN : The CSV File to read
-	 * - OUT a list of arrays of strings :
-	 * {[DATETIME, SENSOR1, ...], [...], ...}
+	 * parseCSVFile reads and formats CSV file created by BCHRECTEMP batch - IN
+	 * : The CSV File to read - OUT a list of arrays of strings : {[DATETIME,
+	 * SENSOR1, ...], [...], ...}
 	 ***************************************/
-	public List<String[]> parseCSVFile (File file) throws IOException {
-		
+	public List<String[]> parseCSVFile(File file) throws IOException {
+
 		List<String[]> result = new ArrayList<String[]>();
 		String[] lineList;
-				
+
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String line;
-		
-		while ((line = reader.readLine()) != null){
-			
+
+		while ((line = reader.readLine()) != null) {
+
 			lineList = line.split(";", -1);
 			result.add(lineList);
 		}
 		return result;
 	}
-	
-	
+
+	public List<String[]> parseTemperatureMeasurements(
+			List<TemperatureMeasurement> tempList, List<String> probesList) {
+		List<String[]> result = new ArrayList<String[]>();
+
+		Iterator<TemperatureMeasurement> it = tempList.iterator();
+
+		while (it.hasNext()) {
+			String[] array = new String[probesList.size()];
+
+			TemperatureMeasurement temp = it.next();
+
+			int index = probesList.indexOf(temp.getTmes_probe_name());
+
+			array[0] = temp.getTmes_date().toString();
+			array[index] = temp.getTmes_value().toString();
+
+			result.add(array);
+		}
+
+		return result;
+
+	}
+
 	/**
-	 * This method creates a TimeSeriesCollection from raw String values 
+	 * This method creates a TimeSeriesCollection from raw String values
+	 * 
 	 * @param data
 	 * @return
 	 * @throws NumberFormatException
 	 * @throws ParseException
 	 */
-	public TimeSeriesCollection createDataset(List<String[]> data) throws NumberFormatException, ParseException {
-		
-		
+	public TimeSeriesCollection createDataset(List<String[]> data)
+			throws NumberFormatException, ParseException {
+
 		TimeSeriesCollection dataSet = new TimeSeriesCollection();
-		
 
 		int compteur = data.size();
 		List<TimeSeries> serie = new ArrayList<TimeSeries>();
-	
+
 		// On cree autant de series qu'il y a de sondes
-		for (int k = 0; k < data.get(0).length - 1 ; k++){
-			serie.add(new TimeSeries("PROBE"+k));
+		for (int k = 0; k < data.get(0).length - 1; k++) {
+			serie.add(new TimeSeries("PROBE" + k));
 		}
-		
+
 		/*
 		 * For each line like [2015-07-21 12:34:56, 12345, 54321]
 		 */
-		for(int i=0 ; i < compteur ; i++){
-	
-			
+		for (int i = 0; i < compteur; i++) {
+
 			/*
 			 * for each temperature value
 			 */
-			for(int j=1 ; j < data.get(i).length ; j++){
-				
+			for (int j = 1; j < data.get(i).length; j++) {
+
 				// Adds [time, temperature] to the corresponding (i) serie
-				serie.get(j-1).addOrUpdate(new Second((new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).parse(data.get(i)[0])), Double.parseDouble(data.get(i)[j]));
+				serie.get(j - 1).addOrUpdate(
+						new Second(
+								(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"))
+										.parse(data.get(i)[0])),
+						Double.parseDouble(data.get(i)[j]));
 			}
 		}
-		
+
 		// Adds each serie to the dataset
-		for (int l = 0; l < serie.size() ; l++){
+		for (int l = 0; l < serie.size(); l++) {
 			dataSet.addSeries(serie.get(l));
 		}
-		
+
 		return dataSet;
-		
+
 	}
-	
+
 	/**
-	 * This method generates a Chart using a TimeSeriesCollection. Legend, title, X-Axis and Y-Axis labels can be modified
+	 * This method generates a Chart using a TimeSeriesCollection. Legend,
+	 * title, X-Axis and Y-Axis labels can be modified
+	 * 
 	 * @param series
 	 * @param title
 	 * @param xAxisLabel
@@ -241,16 +277,40 @@ public class JFreeGraphServlet extends HttpServlet {
 	 * @param legend
 	 * @return
 	 */
-	public JFreeChart generateChartFromTimeSeries(TimeSeriesCollection series, String title, String xAxisLabel, String yAxisLabel, boolean legend){
-		
-		
+	public JFreeChart generateChartFromTimeSeries(TimeSeriesCollection series,
+			String title, String xAxisLabel, String yAxisLabel, boolean legend) {
+
 		JFreeChart chart = null;
 		boolean defaultTooltips = false;
 		boolean defaultURLs = false;
-		
-		
-		chart = ChartFactory.createTimeSeriesChart(title, xAxisLabel, yAxisLabel, series, legend, defaultTooltips, defaultURLs);
-		
+
+		chart = ChartFactory.createTimeSeriesChart(title, xAxisLabel,
+				yAxisLabel, series, legend, defaultTooltips, defaultURLs);
+
 		return chart;
+	}
+
+	public List<String> getDistinctProbes(List<TemperatureMeasurement> list) {
+
+		List<String> result = new ArrayList<String>();
+
+		if (list != null) {
+
+			Iterator<TemperatureMeasurement> it = list.iterator();
+
+			while (it.hasNext()) {
+
+				TemperatureMeasurement temp = it.next();
+
+				if (!result.contains(temp.getTmes_probe_name())) {
+					result.add(temp.getTmes_probe_name());
+				}
+
+			}
+
+		}
+
+		return result;
+
 	}
 }
