@@ -8,8 +8,10 @@ import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +26,8 @@ import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.beans.Etape;
 import net.brewspberry.business.beans.TemperatureMeasurement;
 import net.brewspberry.business.service.EtapeServiceImpl;
+import net.brewspberry.util.ConfigLoader;
+import net.brewspberry.util.Constants;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -47,13 +51,19 @@ public class JFreeGraphServlet extends HttpServlet {
 	public static final int DEFAULT_WIDTH = 800;
 	public static final int DEFAULT_HEIGHT = 300;
 
-	public String PROJECT_ROOT_PATH = "/opt/tomcat/webapps";
+	public String JAVA_ROOT_PATH = Constants.PROJECT_ROOT_PATH + "/"
+			+ Constants.BREW_TEMP;
+	public String API_ROOT_PATH = Constants.PROJECT_ROOT_PATH + "/"
+			+ Constants.BREW_API;
+	public String FIC_ROOT_PATH = Constants.PROJECT_ROOT_PATH + "/"
+			+ Constants.BREW_BATCHES + "/fic";
 
-	public String JAVA_ROOT_PATH = PROJECT_ROOT_PATH + "/TemperatureDisplay";
-	public String FIC_ROOT_PATH = "/home/pi/brewspberry-batches/fic";
+	public String BCHRECTEMP_FIC = ConfigLoader.getConfigByKey(API_ROOT_PATH
+			+ "/config.properties", "files.measurements.temperature");
 
-	public String BCHRECTEMP_FIC = FIC_ROOT_PATH
-			+ "/ds18b20_raw_measurements.csv";
+	public int graphHorizontalTimeLengthInMinutes = Integer
+			.parseInt(ConfigLoader.getConfigByKey(API_ROOT_PATH
+					+ "config.properties", "param.chart.timeLengthInMinutes"));
 
 	static {
 		System.setProperty("java.awt.headless", "true");
@@ -248,12 +258,21 @@ public class JFreeGraphServlet extends HttpServlet {
 			 */
 			for (int j = 1; j < data.get(i).length; j++) {
 
-				// Adds [time, temperature] to the corresponding (i) serie
-				serie.get(j - 1).addOrUpdate(
-						new Second(
-								(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"))
-										.parse(data.get(i)[0])),
-						Double.parseDouble(data.get(i)[j]));
+				Date dataDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+						.parse(data.get(i)[0]);
+
+				Calendar cal1 = Calendar.getInstance();
+				cal1.setTime(dataDate);
+				Calendar cal2 = Calendar.getInstance();
+				cal2.add(Calendar.MINUTE, graphHorizontalTimeLengthInMinutes);
+
+				// If the date of record is within the range we add it to Serie
+				// Collection
+				if (cal1.after(cal2)) {
+					// Adds [time, temperature] to the corresponding (i) serie
+					serie.get(j - 1).addOrUpdate(new Second(dataDate),
+							Double.parseDouble(data.get(i)[j]));
+				}
 			}
 		}
 

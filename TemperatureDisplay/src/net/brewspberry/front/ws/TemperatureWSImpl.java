@@ -102,10 +102,8 @@ public class TemperatureWSImpl implements ITemperatureWS {
 				
 				e.printStackTrace();
 				
-			}
-			
-		}
-		
+			}			
+		}	
 		
 		return result;
 	}
