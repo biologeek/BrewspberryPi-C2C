@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.brewspberry.util.ConfigLoader;
+import net.brewspberry.util.Constants;
+
 /**
  * Servlet implementation class TemperatureServlet
  */
@@ -23,7 +26,7 @@ public class TemperatureServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	
-	public static String _BCHRECTEMP_FIC_ = "/opt/tomcat/webapps/TemperatureDisplay/fic/ds18b20_raw_measurements.csv";
+	public static String _BCHRECTEMP_FIC_ = ConfigLoader.getConfigByKey(Constants.CONFIG_PROPERTIES, "files.measurements.temperature");
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -36,8 +39,36 @@ public class TemperatureServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		String getIt = generateHTML(parseCSVFile(new File(_BCHRECTEMP_FIC_)));
+		String typeOfOutput = "";
+		String getIt = "";
+		
+		String resp = "";
+		String[] res = parseCSVFile(new File(_BCHRECTEMP_FIC_));
+		for (int i = 5 ;i < res.length ; i++){
+			resp = resp+" "+res[i];
+		}
+		
+		
+		if (request.getParameter("type") != null){
+			typeOfOutput = request.getParameter("type");
+		
+			
+			switch (typeOfOutput) {
+			
+			case "html" :
+				
+				getIt = generateHTML(res);
+				break;
+				
+			case "txt" : 
+				getIt = resp;
+				break;
+				
+			default :
+				getIt = resp;
+				break;
+			}
+		}
 		
 		System.out.println("Fichier : "+_BCHRECTEMP_FIC_);
 		PrintWriter output = response.getWriter();
@@ -63,10 +94,9 @@ public class TemperatureServlet extends HttpServlet {
 	    }
 	    last = lastLine.split(";");
 
-	    for (int j = 1; j< last.length ; j++) {
+	    for (int j = 5; j< last.length ; j++) {
 	    	float nbr = Float.parseFloat(last[j]);
 	    	
-	    	nbr = nbr/1000;
 	    	last[j] = Float.toString(nbr);
 	    }
 		return last;
