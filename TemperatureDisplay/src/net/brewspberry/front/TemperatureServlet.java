@@ -68,6 +68,8 @@ public class TemperatureServlet extends HttpServlet {
 				getIt = resp;
 				break;
 			}
+		} else {
+			getIt = resp;
 		}
 		
 		System.out.println("Fichier : "+_BCHRECTEMP_FIC_);
