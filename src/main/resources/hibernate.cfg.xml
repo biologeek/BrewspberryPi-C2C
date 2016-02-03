@@ -20,7 +20,7 @@
 			root
 		</property>
 		<property name="hibernate.connection.password">
-			a
+			raspberry
 		</property>
 		<property name="current_session_context_class">managed</property>
 
