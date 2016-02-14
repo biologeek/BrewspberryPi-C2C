@@ -252,6 +252,7 @@ public class JFreeGraphServlet extends HttpServlet {
 
 		while ((line = reader.readLine()) != null) {
 
+			logger.info(line);
 			lineList = line.split(";", -1);
 			result.add(lineList);
 		}
@@ -309,10 +310,16 @@ public class JFreeGraphServlet extends HttpServlet {
 		int compteur = data.size();
 		List<TimeSeries> serie = new ArrayList<TimeSeries>();
 
-		logger.info("Compteur " + compteur);
+		logger.info("Compteur " + compteur+" length :"+data.get(0).length);
+		
+		for (String e : data.get(0)){
+			
+			logger.info("Print "+e);
+
+		}
 
 		// On cree autant de series qu'il y a de sondes
-		for (int k = 0; k < data.get(0).length - 5; k++) {
+		for (int k = 0; k < data.get(0).length - 4; k++) {
 			serie.add(new TimeSeries("PROBE" + k));
 			logger.info("Added timeSeries PROBE" + k);
 		}
@@ -335,9 +342,9 @@ public class JFreeGraphServlet extends HttpServlet {
 				Calendar cal2 = Calendar.getInstance();
 				cal2.add(Calendar.MINUTE, graphHorizontalTimeLengthInMinutes);
 
-				logger.info("Beginning date of chart : "
-						+ cal1.getTime().toString());
-				logger.info("End date of chart : " + cal2.getTime().toString());
+				//logger.info("Beginning date of chart : "
+					//	+ cal1.getTime().toString());
+				//logger.info("End date of chart : " + cal2.getTime().toString());
 				// If the date of record is within the range we add it to Serie
 				// Collection
 				if (cal1.after(cal2)) {
@@ -345,7 +352,7 @@ public class JFreeGraphServlet extends HttpServlet {
 					if (data.get(i)[j+1] != null) {
 						// Adds [time, temperature] to the corresponding (i)
 						// serie
-						serie.get(j - 4).addOrUpdate(new Second(dataDate),
+						serie.get((j - 4)).addOrUpdate(new Second(dataDate),
 								Double.parseDouble(data.get(i)[j+1]));
 					}
 				}
