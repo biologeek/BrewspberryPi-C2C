@@ -259,6 +259,13 @@ public class JFreeGraphServlet extends HttpServlet {
 		return result;
 	}
 
+	
+	/**
+	 * Converts List of {@link TemperatureMeasurement} 
+	 * @param tempList
+	 * @param probesList
+	 * @return
+	 */
 	public List<String[]> parseTemperatureMeasurements(
 			List<TemperatureMeasurement> tempList, List<String> probesList) {
 		List<String[]> result = new ArrayList<String[]>();
@@ -319,7 +326,7 @@ public class JFreeGraphServlet extends HttpServlet {
 		}
 
 		// On cree autant de series qu'il y a de sondes
-		for (int k = 0; k < data.get(0).length - 4; k++) {
+		for (int k = 0; k < data.get(0).length - 5; k++) {
 			serie.add(new TimeSeries("PROBE" + k));
 			logger.info("Added timeSeries PROBE" + k);
 		}
@@ -332,7 +339,7 @@ public class JFreeGraphServlet extends HttpServlet {
 			/*
 			 * for each temperature value
 			 */
-			for (int j = 4; j < data.get(i).length; j+=2) {
+			for (int j = 5; j < data.get(i).length; j+=2) {
 
 				Date dataDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
 						.parse(data.get(i)[0]);
@@ -352,7 +359,7 @@ public class JFreeGraphServlet extends HttpServlet {
 					if (data.get(i)[j+1] != null) {
 						// Adds [time, temperature] to the corresponding (i)
 						// serie
-						serie.get((j - 4)).addOrUpdate(new Second(dataDate),
+						serie.get((j - 5)).addOrUpdate(new Second(dataDate),
 								Double.parseDouble(data.get(i)[j+1]));
 					}
 				}
