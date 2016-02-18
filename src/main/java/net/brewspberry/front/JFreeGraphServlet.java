@@ -164,9 +164,10 @@ public class JFreeGraphServlet extends HttpServlet {
 
 					try {
 						chart = generateChartFromTimeSeries(
-								createDataset(parseTemperatureMeasurements(
-										tempList, probesList)), "DS18B20",
-								"Time", "Temperature", true);
+								createDataset(
+										parseTemperatureMeasurements(tempList,
+												probesList), false, true),
+								"DS18B20", "Time", "Temperature", true);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -199,9 +200,10 @@ public class JFreeGraphServlet extends HttpServlet {
 
 					try {
 						chart = generateChartFromTimeSeries(
-								createDataset(parseTemperatureMeasurements(
-										tempList, probesList)), "DS18B20",
-								"Time", "Temperature", true);
+								createDataset(
+										parseTemperatureMeasurements(tempList,
+												probesList), false, true),
+								"DS18B20", "Time", "Temperature", true);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -213,8 +215,9 @@ public class JFreeGraphServlet extends HttpServlet {
 		} else {
 			try {
 				chart = generateChartFromTimeSeries(
-						createDataset(parseCSVFile(new File(BCHRECTEMP_FIC))),
-						"DS18B20", "Time", "Temperature", true);
+						createDataset(parseCSVFile(new File(BCHRECTEMP_FIC)),
+								true, false), "DS18B20", "Time", "Temperature",
+						true);
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -259,9 +262,9 @@ public class JFreeGraphServlet extends HttpServlet {
 		return result;
 	}
 
-	
 	/**
-	 * Converts List of {@link TemperatureMeasurement} 
+	 * Converts List of {@link TemperatureMeasurement}
+	 * 
 	 * @param tempList
 	 * @param probesList
 	 * @return
@@ -309,24 +312,25 @@ public class JFreeGraphServlet extends HttpServlet {
 	 * @throws NumberFormatException
 	 * @throws ParseException
 	 */
-	public TimeSeriesCollection createDataset(List<String[]> data)
-			throws NumberFormatException, ParseException {
+	public TimeSeriesCollection createDataset(List<String[]> data,
+			boolean timeLimited, boolean fromDB) throws NumberFormatException,
+			ParseException {
 
 		TimeSeriesCollection dataSet = new TimeSeriesCollection();
 
 		int compteur = data.size();
 		List<TimeSeries> serie = new ArrayList<TimeSeries>();
 
-		logger.info("Compteur " + compteur+" length :"+data.get(0).length);
-		
-		for (String e : data.get(0)){
-			
-			logger.info("Print "+e);
+		logger.info("Compteur " + compteur + " length :" + data.get(0).length);
+
+		for (String e : data.get(0)) {
+
+			logger.info("Print " + e);
 
 		}
 
 		// On cree autant de series qu'il y a de sondes
-		for (int k = 0; k < data.get(0).length - 5; k++) {
+		for (int k = 0; k <= (data.get(0).length - 5) / 2; k++) {
 			serie.add(new TimeSeries("PROBE" + k));
 			logger.info("Added timeSeries PROBE" + k);
 		}
@@ -339,7 +343,13 @@ public class JFreeGraphServlet extends HttpServlet {
 			/*
 			 * for each temperature value
 			 */
-			for (int j = 5; j < data.get(i).length; j+=2) {
+			int increment;
+			if (fromDB) {
+				increment = 1;
+			} else {
+				increment = 2;
+			}
+			for (int j = 5; j < data.get(i).length; j += increment) {
 
 				Date dataDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
 						.parse(data.get(i)[0]);
@@ -348,19 +358,27 @@ public class JFreeGraphServlet extends HttpServlet {
 				cal1.setTime(dataDate);
 				Calendar cal2 = Calendar.getInstance();
 				cal2.add(Calendar.MINUTE, graphHorizontalTimeLengthInMinutes);
+				logger.info("Array size : " + data.get(i).length
+						+ " & compteur=" + j);
 
-				//logger.info("Beginning date of chart : "
-					//	+ cal1.getTime().toString());
-				//logger.info("End date of chart : " + cal2.getTime().toString());
-				// If the date of record is within the range we add it to Serie
-				// Collection
-				if (cal1.after(cal2)) {
-					logger.info("dfqsdfqsdf : " + data.get(i)[j+1]);
-					if (data.get(i)[j+1] != null) {
-						// Adds [time, temperature] to the corresponding (i)
-						// serie
+				if (timeLimited) {
+					if (cal1.after(cal2)) {
+						if (data.get(i)[j] != null) {
+							// Adds [time, temperature] to the corresponding (i)
+							// serie
+
+							logger.info("Adding temperature" + data.get(i)[j]
+									+ " to serie nbr" + (j - 5) / 2);
+							serie.get((j - 5) / 2).addOrUpdate(
+									new Second(dataDate),
+									Double.parseDouble(data.get(i)[j]));
+						}
+					}
+				} else {
+					if (data.get(i)[j] != null) {
+
 						serie.get((j - 5)).addOrUpdate(new Second(dataDate),
-								Double.parseDouble(data.get(i)[j+1]));
+								Double.parseDouble(data.get(i)[j]));
 					}
 				}
 			}
