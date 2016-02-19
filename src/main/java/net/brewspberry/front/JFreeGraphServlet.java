@@ -53,7 +53,7 @@ public class JFreeGraphServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public static final int DEFAULT_WIDTH = 800;
-	public static final int DEFAULT_HEIGHT = 300;
+	public static final int DEFAULT_HEIGHT = 350;
 
 	public String JAVA_ROOT_PATH = Constants.PROJECT_ROOT_PATH + "/"
 			+ Constants.BREW_TEMP;
@@ -71,6 +71,10 @@ public class JFreeGraphServlet extends HttpServlet {
 	public int graphHorizontalTimeLengthInMinutes = Integer
 			.parseInt(ConfigLoader.getConfigByKey(Constants.CONFIG_PROPERTIES,
 					"param.chart.timeLengthInMinutes"));
+	
+	
+	int width;
+	int height;
 
 	static {
 		System.setProperty("java.awt.headless", "true");
@@ -109,28 +113,28 @@ public class JFreeGraphServlet extends HttpServlet {
 
 		// If the request has either width or height attributes, the chart will
 		// be attribute-sized
-		if (!(request.getAttribute("width") != null)) {
+		if (request.getParameter("width") != null) {
 			try {
-				int width = Integer.parseInt((String) request
-						.getAttribute("width"));
+				width = Integer.parseInt((String) request
+						.getParameter("width"));
 			} catch (Exception e) {
-				int width = DEFAULT_WIDTH;
+				width = DEFAULT_WIDTH;
 
 			}
 		} else {
-			int width = DEFAULT_WIDTH;
+			width = DEFAULT_WIDTH;
 		}
-		if (!(request.getAttribute("height") != null)) {
+		if (request.getParameter("height") != null) {
 			try {
-				int height = Integer.parseInt((String) request
-						.getAttribute("height"));
+				height = Integer.parseInt((String) request
+						.getParameter("height"));
 			} catch (Exception e) {
-				int height = DEFAULT_HEIGHT;
+				height = DEFAULT_HEIGHT;
 			}
 		}
 		// else default sizes are applied
 		else {
-			int height = DEFAULT_HEIGHT;
+			height = DEFAULT_HEIGHT;
 		}
 
 		JFreeChart chart = null;
@@ -230,8 +234,10 @@ public class JFreeGraphServlet extends HttpServlet {
 		OutputStream outputStream = response.getOutputStream();
 
 		try {
-			ChartUtilities.writeChartAsPNG(outputStream, chart, DEFAULT_WIDTH,
-					DEFAULT_HEIGHT);
+			logger.info("Graph dimensions : "+width+"x"+height);
+
+			ChartUtilities.writeChartAsPNG(outputStream, chart, width,
+					height);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -296,7 +302,7 @@ public class JFreeGraphServlet extends HttpServlet {
 
 			}
 
-			logger.info(toLog);
+			logger.fine(toLog);
 			result.add(array);
 		}
 
@@ -358,7 +364,7 @@ public class JFreeGraphServlet extends HttpServlet {
 				cal1.setTime(dataDate);
 				Calendar cal2 = Calendar.getInstance();
 				cal2.add(Calendar.MINUTE, graphHorizontalTimeLengthInMinutes);
-				logger.info("Array size : " + data.get(i).length
+				logger.fine("Array size : " + data.get(i).length
 						+ " & compteur=" + j);
 
 				if (timeLimited) {
@@ -367,7 +373,7 @@ public class JFreeGraphServlet extends HttpServlet {
 							// Adds [time, temperature] to the corresponding (i)
 							// serie
 
-							logger.info("Adding temperature" + data.get(i)[j]
+							logger.fine("Adding temperature" + data.get(i)[j]
 									+ " to serie nbr" + (j - 5) / 2);
 							serie.get((j - 5) / 2).addOrUpdate(
 									new Second(dataDate),
@@ -435,7 +441,7 @@ public class JFreeGraphServlet extends HttpServlet {
 			while (it.hasNext()) {
 
 				TemperatureMeasurement temp = it.next();
-				logger.info("Trying probe " + temp.getTmes_probe_name());
+				logger.fine("Trying probe " + temp.getTmes_probe_name());
 				if (!result.contains(temp.getTmes_probe_name())) {
 					logger.info("Got probe " + temp.getTmes_probe_name());
 					result.add(temp.getTmes_probe_name());
