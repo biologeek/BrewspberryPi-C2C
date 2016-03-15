@@ -24,11 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.brewspberry.business.IGenericService;
+import net.brewspberry.business.ISpecificTemperatureMeasurementService;
 import net.brewspberry.business.beans.Brassin;
 import net.brewspberry.business.beans.Etape;
 import net.brewspberry.business.beans.TemperatureMeasurement;
 import net.brewspberry.business.service.BrassinServiceImpl;
 import net.brewspberry.business.service.EtapeServiceImpl;
+import net.brewspberry.business.service.TemperatureMeasurementServiceImpl;
 import net.brewspberry.util.ConfigLoader;
 import net.brewspberry.util.Constants;
 import net.brewspberry.util.LogManager;
@@ -86,6 +88,7 @@ public class JFreeGraphServlet extends HttpServlet {
 
 	IGenericService<Brassin> brassinService = new BrassinServiceImpl();
 
+	ISpecificTemperatureMeasurementService tmesService = new TemperatureMeasurementServiceImpl();
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -154,9 +157,9 @@ public class JFreeGraphServlet extends HttpServlet {
 					String eid = request.getParameter("eid");
 
 					etapeID = Long.parseLong(eid);
+					Etape etape = etapeService.getElementById(etapeID);
 
-					tempList = etapeService.getElementById(etapeID)
-							.getEtp_temperature_measurement();
+					tempList = tmesService.getTemperatureMeasurementByEtape(etape);
 					logger.info("Got " + tempList.size()
 							+ " temp measurements for step " + etapeID);
 					List<String> probesList = new ArrayList<String>();
