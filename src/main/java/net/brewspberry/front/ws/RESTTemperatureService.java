@@ -32,7 +32,7 @@ public class RESTTemperatureService {
 	private Etape currentStep;
 
 	@GET
-	@Path("/initTemperatures/{e}")
+	@Path("/initTemperatures/e/{e}/u/{u}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response initTemperatureForStep(@PathParam("u") String uuid,
 			@PathParam("e") long stepID) throws JSONException {
@@ -51,16 +51,21 @@ public class RESTTemperatureService {
 
 			if (uuid != null) {
 
-				Iterator<TemperatureMeasurement> it = tmesList.iterator();
+				if (uuid != "all") {
+					Iterator<TemperatureMeasurement> it = tmesList.iterator();
 
-				while (it.hasNext()) {
-					TemperatureMeasurement next = it.next();
-					if (next.getTmes_probeUI() == uuid) {
-						filteredList.add(next);
+					while (it.hasNext()) {
+						TemperatureMeasurement next = it.next();
+						if (next.getTmes_probeUI() == uuid) {
+							filteredList.add(next);
+						}
+
 					}
+					result = this.convertListToJSONObject(filteredList);
 
+				} else {
+					result = this.convertListToJSONObject(tmesList);
 				}
-				result = this.convertListToJSONObject(filteredList);
 			} else {
 				result = this.convertListToJSONObject(tmesList);
 			}
@@ -71,11 +76,22 @@ public class RESTTemperatureService {
 	}
 
 	@GET
-	@Path("/updateTemperatures")
+	@Path("/updateTemperatures/e/{e}/u/{u}/l/{l}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateTemperatureForStep(@PathParam("e") long stepID, @PathParam("l") long lastID) {
+	/**
+	 * Returns tempreatures for stepID step, eventually probe with UUID uuid or all for all probes
+	 * since last ID received (lastID)
+	 * @param stepID
+	 * @param uuid
+	 * @param lastID
+	 * @return
+	 */
+	public Response updateTemperatureForStep(@PathParam("e") long stepID,
+			@PathParam("u") String uuid, @PathParam("l") long lastID) {
 
 		List<TemperatureMeasurement> result = null;
+		
+		
 
 		return Response.status(200).entity(result).build();
 	}
