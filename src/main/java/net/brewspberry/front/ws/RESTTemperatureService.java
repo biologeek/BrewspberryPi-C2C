@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -22,6 +23,7 @@ import net.brewspberry.business.beans.Etape;
 import net.brewspberry.business.beans.TemperatureMeasurement;
 import net.brewspberry.business.service.EtapeServiceImpl;
 import net.brewspberry.business.service.TemperatureMeasurementServiceImpl;
+import net.brewspberry.util.LogManager;
 
 @Path("/")
 public class RESTTemperatureService {
@@ -30,7 +32,8 @@ public class RESTTemperatureService {
 	ISpecificTemperatureMeasurementService tmesSpecService = new TemperatureMeasurementServiceImpl();
 	IGenericService<Etape> stepService = new EtapeServiceImpl();
 	private Etape currentStep;
-
+	
+	Logger logger = LogManager.getInstance(RESTTemperatureService.class.getName());
 	@GET
 	@Path("/initTemperatures/e/{e}/u/{u}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -80,7 +83,7 @@ public class RESTTemperatureService {
 	@Produces(MediaType.APPLICATION_JSON)
 	/**
 	 * Returns tempreatures for stepID step, eventually probe with UUID uuid or all for all probes
-	 * since last ID received (lastID)
+	 * since last ID in graph (lastID)
 	 * @param stepID
 	 * @param uuid
 	 * @param lastID
@@ -89,8 +92,21 @@ public class RESTTemperatureService {
 	public Response updateTemperatureForStep(@PathParam("e") long stepID,
 			@PathParam("u") String uuid, @PathParam("l") long lastID) {
 
-		List<TemperatureMeasurement> result = null;
+		List<TemperatureMeasurement> result = new ArrayList<TemperatureMeasurement>();
 		
+		if (lastID > 0){
+			
+			Etape etape = new Etape();
+			
+			etape.setEtp_id(stepID);
+			
+			result = tmesSpecService.getTemperatureMeasurementsAfterID(etape, uuid, lastID);
+			
+			
+		} else {
+			
+			logger.warning("You are trying to update with ID 0");
+		}
 		
 
 		return Response.status(200).entity(result).build();
