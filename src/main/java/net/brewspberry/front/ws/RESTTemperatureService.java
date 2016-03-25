@@ -78,6 +78,39 @@ public class RESTTemperatureService {
 		return Response.status(200).entity(result.toString()).build();
 	}
 
+	
+	
+	@GET
+	@Path("/initTemperatures/e/{e}")
+	@Produces(MediaType.APPLICATION_JSON)
+	/**
+	 * 
+	 * @param stepID
+	 * @return
+	 * @throws JSONException
+	 */
+	public Response initTemperature(@PathParam("e") long stepID) throws JSONException {
+
+		JSONObject json = new JSONObject();
+		JSONArray result = null;
+
+
+		if (stepID > 0) {
+
+			currentStep = stepService.getElementById(stepID);
+
+			List<TemperatureMeasurement> tmesList = tmesSpecService
+					.getTemperatureMeasurementByEtape(currentStep);
+
+			result = this.convertListToJSONObject(tmesList);
+
+
+		}
+
+		return Response.status(200).entity(result.toString()).build();
+		
+		
+	}
 	@GET
 	@Path("/updateTemperatures/e/{e}/u/{u}/l/{l}")
 	@Produces(MediaType.APPLICATION_JSON)
