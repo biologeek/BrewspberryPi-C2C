@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -54,7 +55,7 @@ public class RESTTemperatureService {
 
 			if (uuid != null) {
 
-				if (uuid != "all") {
+				if (uuid == "all") {
 					Iterator<TemperatureMeasurement> it = tmesList.iterator();
 
 					while (it.hasNext()) {
@@ -112,7 +113,7 @@ public class RESTTemperatureService {
 		
 	}
 	@GET
-	@Path("/updateTemperatures/e/{e}/u/{u}/l/{l}")
+	@Path("/updateTemperatures/e/{e}/u/{u}/l/{l}/d/{d}")
 	@Produces(MediaType.APPLICATION_JSON)
 	/**
 	 * Returns tempreatures for stepID step, eventually probe with UUID uuid or all for all probes
@@ -120,21 +121,22 @@ public class RESTTemperatureService {
 	 * @param stepID
 	 * @param uuid
 	 * @param lastID
+	 * @param delayInMinutes
 	 * @return
 	 */
 	public Response updateTemperatureForStep(@PathParam("e") long stepID,
-			@PathParam("u") String uuid, @PathParam("l") long lastID) {
+			@PathParam("u") String uuid, @PathParam("l") long lastID, @PathParam("d") int delayInMinutes) throws JSONException {
 
 		List<TemperatureMeasurement> result = new ArrayList<TemperatureMeasurement>();
-		
+		JSONArray jsonResult = null;
 		if (lastID > 0){
 			
 			Etape etape = new Etape();
 			
 			etape.setEtp_id(stepID);
 			
-			result = tmesSpecService.getTemperatureMeasurementsAfterID(etape, uuid, lastID);
-			
+			result = tmesSpecService.getTemperatureMeasurementsAfterID(etape, uuid, lastID, delayInMinutes);
+			jsonResult = this.convertListToJSONObject(result);
 			
 		} else {
 			
@@ -142,7 +144,7 @@ public class RESTTemperatureService {
 		}
 		
 
-		return Response.status(200).entity(result).build();
+		return Response.status(200).entity(jsonResult.toString()).build();
 	}
 
 	@GET
