@@ -146,6 +146,36 @@ public class RESTTemperatureService {
 
 		return Response.status(200).entity(jsonResult.toString()).build();
 	}
+	
+	/**
+	 * Method used to return most recent measured temperature for step and eventually UUID.
+	 * 
+	 *    If you want to get temperatures for all available 
+	 * 
+	 * @param stepID
+	 * @param uuid
+	 * @return
+	 */
+	@GET
+	@Path("/lastTemperatureValue")
+	public Response getLastTemperatureValue (@PathParam("e") long stepID, @PathParam("u") String uuid){
+		
+		List<TemperatureMeasurement> response = new ArrayList<TemperatureMeasurement> ();
+		JSONArray jsonResult = null;
+
+		if (stepID > 0 && uuid != null){
+			
+			response = tmesSpecService.getLastTemperatureByStepAndUUID(stepID, uuid);
+			
+			logger.fine("Got "+response.size()+" for UUID "+uuid+" and step "+stepID);
+
+		}
+		
+		jsonResult = this.convertListToJSONObject(response);
+
+		
+		return Response.status(200).entity(jsonResult.toString()).build();
+	}
 
 	@GET
 	@Path("/test")
