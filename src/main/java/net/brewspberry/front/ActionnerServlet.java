@@ -197,6 +197,8 @@ public class ActionnerServlet extends HttpServlet {
 					// Update actioner ID if exists in DB
 					for (Actioner act : actioners){
 
+						act.setAct_brassin(currentBrew);
+						act.setAct_etape(currentStep);
 						act = actionerService.isAlreadyStoredAndActivated (act);
 						
 					}
