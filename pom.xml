@@ -79,8 +79,8 @@
 					<artifactId>tomcat7-maven-plugin</artifactId>
 					<version>2.2</version>
 					<configuration>
-						<url>http://192.168.0.20:8080/manager/text</url>
-						<maven.tomcat.url>http://192.168.0.20:8080/manager/text</maven.tomcat.url>
+						<url>http://192.168.0.100:8080/manager/text</url>
+						<maven.tomcat.url>http://192.168.0.100:8080/manager/text</maven.tomcat.url>
 						<server>tomcat8</server>
 						<path>/brewspberry-api</path>
 						<user>admin</user>

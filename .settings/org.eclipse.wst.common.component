@@ -4,7 +4,7 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="brewspberry-core-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/brewspberry-core/brewspberry-core">
+        <dependent-module archiveName="brewspberry-core-0.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/brewspberry-core/brewspberry-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="brewspberry-jbatches-0.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/brewspberry-jbatches/brewspberry-jbatches">
