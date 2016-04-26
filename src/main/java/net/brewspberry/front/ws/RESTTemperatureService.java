@@ -66,7 +66,7 @@ public class RESTTemperatureService {
 
 					while (it.hasNext()) {
 						TemperatureMeasurement next = it.next();
-						if (next.getTmes_probeUI() == uuid) {
+						if (next.getTmes_probeUI().equals(uuid)) {
 							filteredList.add(next);
 						}
 
