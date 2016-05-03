@@ -13,11 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.brewspberry.business.IGenericService;
+import net.brewspberry.business.ISpecificActionerLauncherService;
 import net.brewspberry.business.ISpecificActionerService;
 import net.brewspberry.business.beans.Actioner;
 import net.brewspberry.business.beans.Brassin;
 import net.brewspberry.business.beans.Etape;
 import net.brewspberry.business.service.ActionerServiceImpl;
+import net.brewspberry.business.service.BatchLauncherService;
 import net.brewspberry.business.service.BrassinServiceImpl;
 import net.brewspberry.business.service.EtapeServiceImpl;
 import net.brewspberry.util.Constants;
@@ -36,7 +38,8 @@ public class ActionnerServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ISpecificActionerService actionerService = new ActionerServiceImpl();
-	private ActionerServiceImpl genActionerService = new ActionerServiceImpl();
+	private ISpecificActionerLauncherService actionerLauncherService = new BatchLauncherService();
+	private IGenericService<Actioner> genActionerService = new ActionerServiceImpl();
 
 	private IGenericService<Brassin> brassinService = new BrassinServiceImpl();
 	private IGenericService<Etape> etapeService = new EtapeServiceImpl();
@@ -163,7 +166,7 @@ public class ActionnerServlet extends HttpServlet {
 						try {
 							logger.info("Saving Actioner "
 									+ actioner.getAct_uuid());
-							actioner = actionerService.startAction(actioner); // Checked
+							actioner = actionerLauncherService.startAction(actioner); // Checked
 							logger.info("Saved actioner ID : "
 									+ actioner.getAct_id());
 						} catch (Exception e) {
@@ -233,7 +236,7 @@ public class ActionnerServlet extends HttpServlet {
 						try {
 							logger.info("Saved actioner ID : "
 									+ dactioner.getAct_id());
-							actionerService.stopAction(dactioner);
+							actionerLauncherService.stopAction(dactioner);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -252,7 +255,7 @@ public class ActionnerServlet extends HttpServlet {
 								Constants.ACT_DS18B20)) {
 
 							try {
-								dactioner = actionerService
+								dactioner = actionerLauncherService
 										.startAction(dactioner);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
