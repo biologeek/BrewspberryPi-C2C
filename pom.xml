@@ -7,6 +7,13 @@
 	<packaging>war</packaging>
 	<name>brewspberry-api</name>
 	<description>API and Webservices</description>
+	
+	<parent>
+		<groupId>net.brewspberry</groupId>
+		<artifactId>brewspberry-rpm-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../brewspberry-rpm-parent</relativePath>
+	</parent>
 	<dependencies>
 
 		<dependency>
@@ -90,4 +97,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	
 </project>
