@@ -160,12 +160,12 @@ public class JFreeGraphServlet extends HttpServlet {
 					Etape etape = etapeService.getElementById(etapeID);
 
 					tempList = tmesService.getTemperatureMeasurementByEtape(etape);
-					logger.info("Got " + tempList.size()
+					logger.fine("Got " + tempList.size()
 							+ " temp measurements for step " + etapeID);
 					List<String> probesList = new ArrayList<String>();
 
 					probesList = getDistinctProbes(tempList);
-					logger.info("Got " + probesList.size()
+					logger.fine("Got " + probesList.size()
 							+ " temp measurements for step " + etapeID);
 					response.setContentType("image/png");
 
@@ -196,12 +196,12 @@ public class JFreeGraphServlet extends HttpServlet {
 
 					tempList = brassinService.getElementById(brewID)
 							.getBra_temperature_measurement();
-					logger.info("Got " + tempList.size()
+					logger.fine("Got " + tempList.size()
 							+ " temp measurements for brew " + brewID);
 					List<String> probesList = new ArrayList<String>();
 
 					probesList = getDistinctProbes(tempList);
-					logger.info("Got " + probesList.size()
+					logger.fine("Got " + probesList.size()
 							+ " temp measurements for brew " + brewID);
 					response.setContentType("image/png");
 
@@ -237,7 +237,7 @@ public class JFreeGraphServlet extends HttpServlet {
 		OutputStream outputStream = response.getOutputStream();
 
 		try {
-			logger.info("Graph dimensions : "+width+"x"+height);
+			logger.fine("Graph dimensions : "+width+"x"+height);
 
 			ChartUtilities.writeChartAsPNG(outputStream, chart, width,
 					height);
@@ -258,13 +258,13 @@ public class JFreeGraphServlet extends HttpServlet {
 		List<String[]> result = new ArrayList<String[]>();
 		String[] lineList;
 
-		logger.info("CSV File " + file.getAbsolutePath());
+		logger.fine("CSV File " + file.getAbsolutePath());
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String line;
 
 		while ((line = reader.readLine()) != null) {
 
-			logger.info(line);
+			logger.finer(line);
 			lineList = line.split(";", -1);
 			result.add(lineList);
 		}
@@ -330,18 +330,13 @@ public class JFreeGraphServlet extends HttpServlet {
 		int compteur = data.size();
 		List<TimeSeries> serie = new ArrayList<TimeSeries>();
 
-		logger.info("Compteur " + compteur + " length :" + data.get(0).length);
+		logger.fine("Compteur " + compteur + " length :" + data.get(0).length);
 
-		for (String e : data.get(0)) {
-
-			logger.info("Print " + e);
-
-		}
 
 		// On cree autant de series qu'il y a de sondes
 		for (int k = 0; k <= (data.get(0).length - 5) / 2; k++) {
 			serie.add(new TimeSeries("PROBE" + k));
-			logger.info("Added timeSeries PROBE" + k);
+			logger.fine("Added timeSeries PROBE" + k);
 		}
 
 		/*
@@ -395,12 +390,12 @@ public class JFreeGraphServlet extends HttpServlet {
 
 		// Adds each serie to the dataset
 		for (int l = 0; l < serie.size(); l++) {
-			logger.info("serie size : " + serie.get(l).getItemCount());
+			logger.fine("serie size : " + serie.get(l).getItemCount());
 
 			dataSet.addSeries(serie.get(l));
 		}
 
-		logger.info("dataSet size : " + dataSet.getSeriesCount());
+		logger.fine("dataSet size : " + dataSet.getSeriesCount());
 
 		return dataSet;
 
@@ -424,8 +419,8 @@ public class JFreeGraphServlet extends HttpServlet {
 		boolean defaultTooltips = false;
 		boolean defaultURLs = false;
 
-		logger.info("Series collection size : " + series.getSeriesCount());
-		logger.info("Series size : " + series.getSeries(0).getItemCount());
+		logger.fine("Series collection size : " + series.getSeriesCount());
+		logger.fine("Series size : " + series.getSeries(0).getItemCount());
 
 		chart = ChartFactory.createTimeSeriesChart(title, xAxisLabel,
 				yAxisLabel, series, legend, defaultTooltips, defaultURLs);
@@ -446,7 +441,7 @@ public class JFreeGraphServlet extends HttpServlet {
 				TemperatureMeasurement temp = it.next();
 				logger.fine("Trying probe " + temp.getTmes_probe_name());
 				if (!result.contains(temp.getTmes_probe_name())) {
-					logger.info("Got probe " + temp.getTmes_probe_name());
+					logger.fine("Got probe " + temp.getTmes_probe_name());
 					result.add(temp.getTmes_probe_name());
 				}
 

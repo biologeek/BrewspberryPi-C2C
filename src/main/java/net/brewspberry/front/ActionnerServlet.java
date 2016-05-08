@@ -113,7 +113,7 @@ public class ActionnerServlet extends HttpServlet {
 
 				for (Actioner actioner : actioners) {
 
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"Nom de l'actionner : " + actioner.getAct_nom());
 				}
 
@@ -164,8 +164,7 @@ public class ActionnerServlet extends HttpServlet {
 
 						
 						try {
-							logger.info("Saving Actioner "
-									+ actioner.getAct_uuid());
+						
 							actioner = actionerLauncherService.startAction(actioner); // Checked
 							logger.info("Saved actioner ID : "
 									+ actioner.getAct_id());
@@ -242,7 +241,7 @@ public class ActionnerServlet extends HttpServlet {
 							e.printStackTrace();
 						}
 						try {
-							logger.info("Trying to set ID to actioner");
+							logger.fine("Trying to set ID to actioner");
 							DeviceParser.getInstance().setIdToActioner(
 									dactioner);
 						} catch (Exception e) {
